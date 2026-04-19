@@ -1,0 +1,17 @@
+name: RestartPlugin
+version: 1.1
+main: me.restart.plugin.RestartPlugin
+api-version: 1.21
+
+commands:
+  retart:
+    description: Restart server countdown
+    usage: /retart <seconds>
+    permission: restart.use
+    permission-message: "§c你沒有權限使用這個指令！"
+    aliases: [restart]
+
+permissions:
+  restart.use:
+    description: Allows using /retart
+    default: op
