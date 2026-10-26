@@ -1,4 +1,4 @@
-🧩 RestartPlugin（Paper 1.21.11）
+🧩 RestartPlugin（Paper 26.3）
 
 一個簡單、實用、可控的伺服器重啟插件
 支援倒數提示 + 大標題提醒 + 權限管理，適合任何 Minecraft 伺服器使用。
@@ -93,7 +93,9 @@ plugins/
 
 ⚙️ 相容版本
 
-✅ Paper 1.21.11
+✅ Paper 26.3（Minecraft 26.3）
+
+⚠ 需要 Java 25
 
 ⚠ 其他版本未測試（但通常可用）
 

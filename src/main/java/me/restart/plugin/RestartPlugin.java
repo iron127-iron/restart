@@ -1,5 +1,8 @@
 package me.restart.plugin;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -7,7 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.time.Duration;
+
 public class RestartPlugin extends JavaPlugin {
+
+    private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.legacySection();
 
     private boolean isRestarting = false;
     private RestartCountdown countdownTask = null;
@@ -15,6 +22,10 @@ public class RestartPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         getLogger().info("RestartPlugin 已啟用！");
+    }
+
+    private Component msg(String legacy) {
+        return LEGACY.deserialize(legacy);
     }
 
     @Override
@@ -26,14 +37,14 @@ public class RestartPlugin extends JavaPlugin {
 
             // Permission check
             if (!sender.hasPermission("restart.use")) {
-                sender.sendMessage("§c你沒有權限使用這個指令！");
+                sender.sendMessage(msg("§c你沒有權限使用這個指令！"));
                 return true;
             }
 
             // /retart stop — 停止重啟倒數
             if (args.length >= 1 && args[0].equalsIgnoreCase("stop")) {
                 if (!isRestarting || countdownTask == null) {
-                    sender.sendMessage("§e目前沒有重啟倒數！");
+                    sender.sendMessage(msg("§e目前沒有重啟倒數！"));
                     return true;
                 }
                 countdownTask.cancel();
@@ -42,20 +53,20 @@ public class RestartPlugin extends JavaPlugin {
 
                 // 清除畫面上的標題
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.sendTitle("§a已取消重啟", "", 0, 0, 0);
+                    p.showTitle(Title.title(msg("§a已取消重啟"), Component.empty()));
                 }
 
-                sender.sendMessage("§a已停止重啟倒數！");
+                sender.sendMessage(msg("§a已停止重啟倒數！"));
                 return true;
             }
 
             if (isRestarting) {
-                sender.sendMessage("§c已經在重啟倒數中了！");
+                sender.sendMessage(msg("§c已經在重啟倒數中了！"));
                 return true;
             }
 
             if (args.length != 1) {
-                sender.sendMessage("§c用法: /retart <秒> | /retart stop");
+                sender.sendMessage(msg("§c用法: /retart <秒> | /retart stop"));
                 return true;
             }
 
@@ -63,12 +74,12 @@ public class RestartPlugin extends JavaPlugin {
             try {
                 time = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                sender.sendMessage("§c請輸入數字！");
+                sender.sendMessage(msg("§c請輸入數字！"));
                 return true;
             }
 
             if (time <= 0 || time > 60) {
-                sender.sendMessage("§c時間必須在 1~60 秒之間！");
+                sender.sendMessage(msg("§c時間必須在 1~60 秒之間！"));
                 return true;
             }
 
@@ -78,7 +89,7 @@ public class RestartPlugin extends JavaPlugin {
             this.countdownTask = task;
             task.runTaskTimer(this, 0L, 20L);
 
-            sender.sendMessage("§a已開始重啟倒數！");
+            sender.sendMessage(msg("§a已開始重啟倒數！"));
             return true;
         }
 
@@ -97,17 +108,19 @@ public class RestartPlugin extends JavaPlugin {
             if (countdown <= 0) {
                 RestartPlugin.this.countdownTask = null;
                 RestartPlugin.this.isRestarting = false;
-                Bukkit.broadcastMessage("§c伺服器正在重啟...");
+                Bukkit.getServer().sendMessage(msg("§c伺服器正在重啟..."));
                 cancel();
+                //noinspection deprecation
+                Bukkit.shutdown();
                 return;
             }
 
             for (Player p : Bukkit.getOnlinePlayers()) {
-                p.sendTitle(
-                        "§c⚠ 即將重啟 ⚠",
-                        "§e" + countdown + " 秒後重啟",
-                        0, 20, 0
-                );
+                p.showTitle(Title.title(
+                        msg("§c⚠ 即將重啟 ⚠"),
+                        msg("§e" + countdown + " 秒後重啟"),
+                        Title.Times.times(Duration.ZERO, Duration.ofMillis(1000), Duration.ZERO)
+                ));
             }
 
             countdown--;
