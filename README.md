@@ -52,10 +52,13 @@ X 秒後重啟
 
 /retart <秒>
 /restart <秒>
+/retart stop   ← 取消正在倒數的重啟
 
 📌 範例：
 
 /retart 10
+
+/retart stop
 
 
 ---
