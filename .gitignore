@@ -1,0 +1,12 @@
+# Gradle / build
+.gradle/
+build/
+**/build/
+*.jar
+!src/**/*.jar
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
