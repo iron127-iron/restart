@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "restart",
+  "version": "${version}",
+  "name": "RestartMod",
+  "description": "A Fabric mod that adds a /restart command with countdown support for Minecraft 1.21.11 servers.",
+  "authors": [
+    "iron127"
+  ],
+  "contact": {
+    "homepage": "https://github.com/iron127-iron/restart",
+    "sources": "https://github.com/iron127-iron/restart"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "me.restart.mod.RestartMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.9",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": ">=0.138.2"
+  },
+  "suggests": {
+    "modmenu": ">=1.0.0"
+  }
+}
